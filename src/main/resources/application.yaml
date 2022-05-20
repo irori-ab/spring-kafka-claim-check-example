@@ -1,0 +1,21 @@
+spring:
+  kafka:
+    security.protocol: SSL
+    ssl:
+      key-store-type: PKCS12
+      trust-store-type: PKCS12
+    producer:
+      properties:
+        enable.idempotence: false
+        interceptor.classes: se.irori.kafka.claimcheck.ClaimCheckProducerInterceptor
+        value.serializer: se.irori.kafka.claimcheck.ClaimCheckSerializer
+        value.serializer.wrapped.serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      properties:
+        value.deserializer: se.irori.kafka.claimcheck.ClaimCheckDeserializer
+        value.deserializer.wrapped.deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    properties:
+      claimcheck.backend.class: se.irori.kafka.claimcheck.azure.AzureBlobStorageClaimCheckBackend
+      #azure.blob.storage.account.endpoint: https://<your-storage-account>.blob.core.windows.net
+      #azure.blob.storage.account.sastoken.from: file:/path/to/test-topic-1-sas-write.sastoken
+      claimcheck.checkin.uncompressed-batch-size.over.bytes: 1
